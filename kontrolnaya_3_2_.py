@@ -13,3 +13,4 @@ def palindrome(string):
 
 stroka = input()
 print(palindrome(stroka))
+print('РАСИЯ')

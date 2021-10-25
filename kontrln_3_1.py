@@ -11,3 +11,4 @@ def credit_card(string):
 
 num = input()
 print(credit_card(num))
+print('РАСИЯ')
