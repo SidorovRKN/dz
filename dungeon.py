@@ -1,6 +1,79 @@
-from main import *
 import json
 import sys
+
+
+def finder(dict_name):
+    lst = []
+    for index_1 in dict_name:
+        for index_2 in dict_name[index_1]:
+            if type(index_2) is dict:
+                lst.append(index_2)
+    return lst
+
+
+def opener(dict_base, lst_index):
+    dict_search = finder(dict_base)[lst_index]
+    name_loc = tuple(dict_search.keys())[0]
+    field_names[0] = name_loc
+    field_names[2] -= float(name_loc[name_loc.find('m') + 1:])
+    with open('journal.txt', mode='a') as journal:
+        str_field_names = field_names.copy()
+        str_field_names[1], str_field_names[2] = str(field_names[1]), str(field_names[2])
+        journal.write('__'.join(str_field_names))
+        journal.write('\n')
+    print(field_names)
+    return dict_search
+
+
+def fight(dit, num, list_or_not):
+    if list_or_not == 'not':
+        name = dit[tuple(dit.keys())[0]][num]
+    elif list_or_not == 'list':
+        name = dit[tuple(dit.keys())[0]][0][num]
+    else:
+        print('error')
+    print('сейчас вы ведете бой с ', name)
+    exp = name[name.find('p') + 1:name.find('_t')]
+    tm = name[name.find('m') + 1:]
+    if type(field_names[1]) is int:
+        field_names[1] += int(exp)
+    else:
+        field_names[1] = int(exp)
+    field_names[2] -= float(tm)
+    print('монстр убит \n')
+    with open('journal.txt', mode='a') as journal:
+        str_field_names = field_names.copy()
+        str_field_names[1], str_field_names[2] = str(field_names[1]), str(field_names[2])
+        journal.write('__'.join(str_field_names))
+        journal.write('\n')
+    print(field_names)
+
+
+def while_fight(count, fight_loc, list_or_not):
+    counter = 0
+    while counter < count:
+        comand = input(':__')
+        if comand == 'continue':
+            if list_or_not == 'not':
+                fight(fight_loc, counter, list_or_not='not')
+            elif list_or_not == 'list':
+                fight(fight_loc, counter, list_or_not='list')
+            else:
+                break
+            counter += 1
+            if counter == count:
+                print('вы убили всех монстров тут ')
+        elif comand == 's':
+            print('вы вышли из режима битвы\n')
+            break
+
+
+with open('journal.txt', mode='w') as fil:
+    fil.flush()
+
+remaining_time = '1234567890.0987654321'
+field_names = ['current_location', 'current_experience', 'current_date']
+field_names[2] = float(remaining_time)
 
 with open('rpg.json') as file:
     data = json.load(file)
@@ -93,7 +166,8 @@ while True:
             command = input('::__')
             if command == 'fight':
                 fight(dit_2, 0, 'not')
-                print('(монстров больще нет)тут проходы в локации 4, 5 и 6 (введите номер локации что бы войти в нее)___\n')
+                print(
+                    '(монстров больще нет)тут проходы в локации 4, 5 и 6 (введите номер локации что бы войти в нее)___\n')
             elif command == 's':
                 print(field_names)
                 sys.exit()
@@ -109,8 +183,8 @@ while True:
                     if command == 'fight':
                         print('____Вы в режиме битвы, что бы выйти из него введите s________\n'
                               '____что бы продолжить битву уже с монстрaми введите continue_\n'
-                              '____всего тут находятся 4 монстра____________________________\n')
-                        while_fight(4, dit_4, list_or_not='list')
+                              '____всего тут находятся 3 монстра____________________________\n')
+                        while_fight(3, dit_4, list_or_not='not')
                         print('____Все монстры убиты, но вы зашли в тупик___')
                         print(field_names)
                         sys.exit()
@@ -218,10 +292,13 @@ while True:
                         while True:
                             command = input('::__')
                             if command == 'fight':
-                                print('Вы в режиме битвы')
+                                print('____Вы в режиме битвы, что бы выйти из него введите s________\n'
+                                      '____что бы продолжить битву уже с монстрaми введите continue_\n'
+                                      '____всего тут находятся 5 монстров___________________________\n')
                                 while_fight(5, dit_b1, list_or_not='not')
                                 print(field_names)
-                                print('Вы зашли в тупик и нашли _РА СИ Я_РА СИ Я_РА СИ Я_РА СИ Я_РА СИ Я_РА СИ Я_РА СИ Я_')
+                                print(
+                                    'Вы зашли в тупик и нашли _РА СИ Я_РА СИ Я_РА СИ Я_РА СИ Я_РА СИ Я_РА СИ Я_РА СИ Я_')
                                 sys.exit()
                             elif command == 's':
                                 print(field_names)
@@ -230,4 +307,3 @@ while True:
     elif command == 's':
         print(field_names)
         break
-
